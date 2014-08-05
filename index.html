@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Smscountjs by likerRr</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Smscountjs</h1>
+        <p>Get sms count (cyrillic, latin)</p>
+
+        <p class="view"><a href="https://github.com/likerRr/smscountjs">View the Project on GitHub <small>likerRr/smscountjs</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/likerRr/smscountjs/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/likerRr/smscountjs/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/likerRr/smscountjs">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h3>
+<a name="what-is-smscountjs" class="anchor" href="#what-is-smscountjs"><span class="octicon octicon-link"></span></a>What is <em>smscountjs</em>?</h3>
+
+<p>It provides you some ways to obtain sms count and characters left via provided text string</p>
+
+<h3>
+<a name="why-i-need-it" class="anchor" href="#why-i-need-it"><span class="octicon octicon-link"></span></a>Why i need it?</h3>
+
+<p>Sometimes may be useful to integrate into your project sms newsletter. So, once you've done it, it would be nice to have some hints (for those who will write sms text) such as total sms count and character left to next sms. At this point you need <strong>smscountjs</strong></p>
+
+<h3>
+<a name="how-can-i-use-it" class="anchor" href="#how-can-i-use-it"><span class="octicon octicon-link"></span></a>How can i use it?</h3>
+
+<p>Just include <code>smscount.min.js</code> to your html document, create <code>SMS</code> instance and call <code>count</code> method or use <code>smsCount</code> method of <code>String</code> object</p>
+
+<h3>
+<a name="examples-examples" class="anchor" href="#examples-examples"><span class="octicon octicon-link"></span></a>Examples, examples!</h3>
+
+<p>Let's see, how it works by first way:</p>
+
+<pre><code>var sms = SMS(), // also you can use `new` keyword
+    text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
+        'current total sms count and characters left to next sms. SMS in latin may contain ' +
+        '160 characters per SMS';
+
+sms.count(text, function(totalCount, charsLeft, source) {
+    console.log('total: ' + totalCount); // total sms count
+    console.log('left: ' + charsLeft); // characters left to next sms
+    console.log(parts); // source text separated by SMS limitation 
+});
+</code></pre>
+
+<p>Code above will output:
+<img src="http://clip2net.com/clip/m182888/1407244798-bc3e6-8kb.png?nocache=1" alt="This image"></p>
+
+<p>If you prefer to use <code>smscount</code> directly with String, just make same:</p>
+
+<pre><code>var text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
+    'current total sms count and characters left to next sms. SMS in latin may contain ' +
+    '160 characters per SMS';
+
+text.smsCount(function(totalCount, charsLeft, parts) {
+    console.log('total: ' + totalCount);
+    console.log('left: ' + charsLeft);
+    console.log(parts)
+});
+// output will be the same as above
+</code></pre>
+
+<p>See? It's pretty simple!</p>
+
+<h3>
+<a name="how-about-utf-16" class="anchor" href="#how-about-utf-16"><span class="octicon octicon-link"></span></a>How about UTF-16?</h3>
+
+<p>As known, SMS protocol can send only 160 bytes of data. Currently <code>smscount</code> may work with latin (160 symbols) and cyrillic (70 sybmols). Be free to use both latin and cyrillic encoding</p>
+
+<h3>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h3>
+
+<p>You can configure limit for latin and cyrillic encoding, by passing options object to SMS constructor:</p>
+
+<pre><code>var sms = SMS({
+        latin: 50,
+        cyrillic: 20
+    }),
+    text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
+        'current total sms count and characters left to next sms. SMS in latin may contain ' +
+        '160 characters per SMS';
+
+sms.count(text, function(totalCount, charsLeft, parts) {
+    console.log('total: ' + totalCount);
+    console.log('left: ' + charsLeft);
+    console.log(parts)
+});
+</code></pre>
+
+<p>Code above will output:
+<img src="http://clip2net.com/clip/m182888/1407248152-7a06b-12kb.png?nocache=1" alt="enter image description here"></p>
+
+<p>To configure call from String object, pass options object as first parameter and callback as second:</p>
+
+<pre><code>var text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
+    'current total sms count and characters left to next sms. SMS in latin may contain ' +
+    '160 characters per SMS';
+
+text.smsCount({
+    latin: 50,
+    cyrillic: 20
+}, function(totalCount, charsLeft, parts) {
+    console.log('total: ' + totalCount);
+    console.log('left: ' + charsLeft);
+    console.log(parts)
+});
+// output will be the same as above
+</code></pre>
+
+<p>Thats all, again pretty simple, yeah?</p>
+
+<h3>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
+
+<p>Under MIT license (<a href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a>)</p>
+
+<pre><code>$ cd your_repo_root/repo_name
+$ git fetch origin
+$ git checkout gh-pages
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/likerRr">likerRr</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
