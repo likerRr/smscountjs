@@ -9,26 +9,39 @@
 
 	<script>
 		var sms = SMS({
-				latin: 50,
-				cyrillic: 20
-			}), // also you can use `new` keyword
+				_7bit: 160,
+				_16bit: 70
+			}),// also you can use `new` keyword
 			text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
 				'current total sms count and characters left to next sms. SMS in latin may contain ' +
-				'160 characters per SMS';
+				'up to 160 characters per SMS',
+			cyrText = 'Привет, мир! Этот простой пример демонстрирует работу `smscountjs` для подсчета ' +
+				'текущего количества SMS и символов, оставшихся до следующей SMS. SMS в латинской кодировке ' +
+				'может содержать до 160 символов в пределах одной SMS';
 
-		sms.count(text, function(totalCount, charsLeft, parts) {
+		sms.count(text, function(totalCount, charsLeft, parts, limit) {
 			console.log('total: ' + totalCount);
 			console.log('left: ' + charsLeft);
-			console.log(parts)
+			console.log('limit: ' + limit);
+			console.log(parts);
+			// get full message
+			console.log(parts.join('').length);
+			// get full message length
+			console.log(parts.join(''));
 		});
 
-		text.smsCount({
-			latin: 50,
-			cyrillic: 20
-		}, function(totalCount, charsLeft, parts) {
+		cyrText.smsCount({
+			_7bit: 160,
+			_16bit: 70
+		}, function(totalCount, charsLeft, parts, limit) {
 			console.log('total: ' + totalCount);
 			console.log('left: ' + charsLeft);
-			console.log(parts)
+			console.log('limit: ' + limit);
+			console.log(parts);
+			// get full message
+			console.log(parts.join('').length);
+			// get full message length
+			console.log(parts.join(''));
 		});
 
 	</script>

@@ -12,8 +12,8 @@
      * Object to work with sms count and characters left to next sms
      * @constructor
      * @param {object} [options]
-     * @param {number} options.cyrillic
-     * @param {number} options.latin
+     * @param {number} options._16bit
+     * @param {number} options._7bit
      * @returns {SMS|window.SMS}
      */
     window.SMS = function(options) {
@@ -28,7 +28,10 @@
             totalSms = 0,
             charsLeft = 0,
             parts = [],
-            cyrillicReg = /[а-яА-Я]+/ig;
+            // Default 7-bit GSM char set
+            // http://en.wikipedia.org/wiki/GSM_03.38#GSM_7_bit_default_alphabet_and_extension_table_of_3GPP_TS_23.038_.2F_GSM_03.38
+            _7bit = /^[@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'\(\)\*\+,-\.\/0123456789:;<=>\?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà\f\^\{\}\\\[~]|€]*$/g,
+            limit;
 
         var sliceStr = function(str, limit) {
             var end = str.slice(limit),
@@ -43,13 +46,17 @@
         };
 
         /**
-         * Limits to latin & cyrillic chars count
-         * @type {{latin: number, cyrillic: number}}
+         * Limits to _7bit & _16bit chars count
+         * @type {{_7bit: number, _16bit: number}}
          */
         self.options = {
-            latin: 160,
-            cyrillic: 70
+            // latin as usual
+            _7bit: 160,
+            // cyrillic and same
+            _16bit: 70
         };
+
+        limit = self.options._7bit;
 
         // extend options if passed
         if ((options !== 'undefined') && (typeof options == 'object')) {
@@ -68,18 +75,18 @@
          * @return {SMS|window.SMS}
          */
         self.count = function(text, cb) {
-            var isCyrillic = cyrillicReg.test(text),
-                limit = isCyrillic ? self.options['cyrillic'] : self.options['latin'],
+            var is7bit = _7bit.test(text),
                 textLen = text.length;
 
+            limit = is7bit ? self.options['_7bit'] : self.options['_16bit'];
             parts = [];
 
-            totalSms = Math.floor(textLen / limit);
+            totalSms = Math.ceil(textLen / limit);
             charsLeft = limit - (textLen % limit);
             sliceStr(text, limit);
 
             if (typeof cb == 'function') {
-                cb(totalSms, charsLeft, parts)
+                cb(totalSms, charsLeft, parts, limit)
             }
 
             return this;
@@ -101,6 +108,14 @@
             return totalSms;
         };
 
+        /**
+         * Return current limit according to charset
+         * @returns {number}
+         */
+        self.limit = function() {
+            return limit;
+        };
+
         return self;
     };
 
@@ -108,8 +123,8 @@
      * Calculate and pass sms count, characters left to next sms, source in callback. If no options passed,
      * callback will be called as first parameter
      * @param {object} [options]
-     * @param {string} options.cyrillic
-     * @param {string} options.latin
+     * @param {number} options._16bit
+     * @param {number} options._7bit
      * @param cb - will call after counting with 3 params: totalSms, charsLeft, text
      * @returns {String}
      */
