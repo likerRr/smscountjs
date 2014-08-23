@@ -140,10 +140,11 @@ To configure call from String object, pass options object as first parameter and
 Thats all, again pretty simple, yeah?
 
 ### References
-[SMS description](https://en.wikipedia.org/wiki/SMS)
-[GSM 03.38 character set](http://en.wikipedia.org/wiki/GSM_03.38)
-[ASCII table for languages](http://webdesign.about.com/od/localization/l/blhtmlcodes-fr.htm)
-[How to count character by byte length (ru)](http://www.epochta.ru/knowledgebase/articles/sms-long.html)
+
+ - [SMS description](https://en.wikipedia.org/wiki/SMS)
+ - [GSM 03.38 character set](http://en.wikipedia.org/wiki/GSM_03.38)
+ - [ASCII table for languages](http://webdesign.about.com/od/localization/l/blhtmlcodes-fr.htm)
+ - [How to count character by byte length (ru)](http://www.epochta.ru/knowledgebase/articles/sms-long.html)
 
 ### License
 Under MIT license (http://www.opensource.org/licenses/mit-license.php)
