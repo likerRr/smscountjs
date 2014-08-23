@@ -11,6 +11,7 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+	  <script src="javascripts/smscount.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -28,6 +29,62 @@
         </ul>
       </header>
       <section>
+      <h3>
+	      <a name="demo" class="anchor" href="#what-is-smscountjs"><span class="octicon octicon-link"></span></a>Demo</h3>
+	      <div style="clear: both;">
+	        <textarea style="float: right;" id="sms-message" cols="40" placeholder="Write your sms text here" rows="5">
+		        Hello, world! This is a simple example of how to use "smscountjs" to calculate current total sms count and characters left to next sms. SMS in latin may contain up to 160 characters per SMS
+	        </textarea>
+		    <p style="float: left">
+			    Limit: <span id="sms-limit"></span><br/>
+			    Characters left: <span id="sms-chars-left"></span><br/>
+			    SMS count: <span id="sms-count"></span><br/>
+		    </p>
+	      </div>
+	      <script>
+		      window.onload = function() {
+			      var message = document.getElementById('sms-message'),
+				      smsLimit = document.getElementById('sms-limit'),
+				      charsLeft = document.getElementById('sms-chars-left'),
+				      smsCount = document.getElementById('sms-count'),
+				      smsParts = document.getElementById('parts'),
+				      li;
+
+			      message.value.smsCount(function(total, left, parts, limit) {
+				      smsLimit.innerHTML = limit;
+				      charsLeft.innerHTML = left;
+				      smsCount.innerHTML = total;
+
+				      for (var i = 0; i < parts.length; i++) {
+					      li = document.createElement('li');
+					      li.innerHTML = parts[i];
+					      smsParts.appendChild(li);
+				      }
+			      });
+
+			      message.addEventListener('keyup', function() {
+				      var text = this.value,
+					      li;
+
+				      smsParts.innerHTML = '';
+				      text.smsCount(function(total, left, parts, limit) {
+					      smsLimit.innerHTML = limit;
+					      charsLeft.innerHTML = left;
+					      smsCount.innerHTML = total;
+
+					      for (var i = 0; i < parts.length; i++) {
+						      li = document.createElement('li');
+						      li.innerHTML = parts[i];
+						      smsParts.appendChild(li);
+					      }
+				      });
+			      });
+		      };
+
+	      </script>
+	      <div style="clear: both;"></div>
+	      Parts:
+	      <ul id="parts"></ul>
         <h3>
 <a name="what-is-smscountjs" class="anchor" href="#what-is-smscountjs"><span class="octicon octicon-link"></span></a>What is <em>smscountjs</em>?</h3>
 
