@@ -12,8 +12,9 @@
      * Object to work with sms count and characters left to next sms
      * @constructor
      * @param {object} [options]
-     * @param {number} options._16bit
-     * @param {number} options._7bit
+     * @param {number} [options._7bit]
+     * @param {number} [options._8bit]
+     * @param {number} [options._16bit]
      * @returns {SMS|window.SMS}
      */
     window.SMS = function(options) {
@@ -30,7 +31,9 @@
             parts = [],
             // Default 7-bit GSM char set
             // http://en.wikipedia.org/wiki/GSM_03.38#GSM_7_bit_default_alphabet_and_extension_table_of_3GPP_TS_23.038_.2F_GSM_03.38
-            _7bit = /^[@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'\(\)\*\+,-\.\/0123456789:;<=>\?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà\f\^\{\}\\\[~]|€]*$/g,
+            _7bit = /^[@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'\(\)\*\+,-\.\/0123456789:;<=>\?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà\f\^\{\}\\\[~\]|€]*$/g,
+            // 7-bit mask + 8-bit mask
+            _8bit = /^[ÀÂâçÈÊêËëÎîÏïÔôŒœÙÛû«»₣„“”°@£\$¥èéùìòÇ\nØø\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\"#¤%&'\(\)\*\+,-\.\/0123456789:;<=>\?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà\f\^\{\}\\\[~\]|€]*$/g,
             limit;
 
         var sliceStr = function(str, limit) {
@@ -46,13 +49,15 @@
         };
 
         /**
-         * Limits to _7bit & _16bit chars count
-         * @type {{_7bit: number, _16bit: number}}
+         * Limits to _7bit, _8bit & _16bit chars count
+         * @type {{_7bit: number, _8bit: number, _16bit: number}}
          */
         self.options = {
             // latin as usual
             _7bit: 160,
-            // cyrillic and same
+            // french, german (specific symbols, not in utf-8)
+            _8bit: 140,
+            // cyrillic and other
             _16bit: 70
         };
 
@@ -71,14 +76,15 @@
          * Calculate sms count, characters left to next sms and call callback
          * function with 3 params: totalSms, charsLeft, source text
          * @param text - source string
-         * @param cb - callback(totalSms, charsLeft, text)
-         * @return {SMS|window.SMS}
+         * @param [cb] - callback(totalSms, charsLeft, text)
+         * @return {SMS|window.SMS|{totalSms: number, charsLeft: number, parts: Array, limit: number}}
          */
         self.count = function(text, cb) {
             var is7bit = _7bit.test(text),
+                is8bit = _8bit.test(text),
                 textLen = text.length;
 
-            limit = is7bit ? self.options['_7bit'] : self.options['_16bit'];
+            limit = is7bit ? self.options['_7bit'] : (is8bit ? self.options['_8bit'] : self.options['_16bit']);
             parts = [];
 
             totalSms = Math.ceil(textLen / limit);
@@ -88,12 +94,20 @@
             if (typeof cb == 'function') {
                 cb(totalSms, charsLeft, parts, limit)
             }
+            else if (cb === undefined) {
+                return {
+                    totalSms: totalSms,
+                    charsLeft: charsLeft,
+                    parts: parts,
+                    limit: limit
+                }
+            }
 
             return this;
         };
 
         /**
-         * Return characters left to next sms
+         * Returns characters left to next sms
          * @returns {number}
          */
         self.charsLeft = function() {
@@ -101,7 +115,7 @@
         };
 
         /**
-         * Return total sms count
+         * Returns total sms count
          * @returns {number}
          */
         self.total = function() {
@@ -109,11 +123,19 @@
         };
 
         /**
-         * Return current limit according to charset
+         * Returns current limit according to charset
          * @returns {number}
          */
         self.limit = function() {
             return limit;
+        };
+
+        /**
+         * Returns message parts, separated by `limit` count
+         * @returns {Array}
+         */
+        self.parts = function() {
+            return parts;
         };
 
         return self;
@@ -125,7 +147,7 @@
      * @param {object} [options]
      * @param {number} options._16bit
      * @param {number} options._7bit
-     * @param cb - will call after counting with 3 params: totalSms, charsLeft, text
+     * @param [cb] - will call after counting with 3 params: totalSms, charsLeft, text
      * @returns {String}
      */
     String.prototype.smsCount = function(options, cb) {

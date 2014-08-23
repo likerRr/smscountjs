@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<script src="../smscount.js"></script>
+
+<script>
+	var latinText = 'to have fun without stopping',
+		frenchText = 's\'amuser sans arrêt',
+		cyrillicText = 'веселиться без остановки',
+		mixedText = latinText + ', ' + frenchText + ', ' + cyrillicText;
+
+	latinText.smsCount(function(totalCount, charsLeft, parts, limit) {
+		console.log('limit: ' + limit);
+	});
+	frenchText.smsCount(function(totalCount, charsLeft, parts, limit) {
+		console.log('limit: ' + limit);
+	});
+	cyrillicText.smsCount(function(totalCount, charsLeft, parts, limit) {
+		console.log('limit: ' + limit);
+	});
+	mixedText.smsCount(function(totalCount, charsLeft, parts, limit) {
+		console.log('limit: ' + limit);
+	});
+
+</script>
+</body>
+</html>

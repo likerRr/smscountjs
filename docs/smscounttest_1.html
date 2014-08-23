@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<script src="../smscount.js"></script>
+
+<script>
+	var sms = SMS(),// also you can use "new" keyword
+		text = 'Hello, world! This is a simple example of how to use "smscountjs" to calculate ' +
+			'current total sms count and characters left to next sms. SMS in latin may contain ' +
+			'up to 160 characters per SMS';
+
+	sms.count(text, function(totalCount, charsLeft, parts, limit) {
+		console.log('total: ' + totalCount);
+		console.log('left: ' + charsLeft);
+		console.log('limit: ' + limit);
+		console.log(parts);
+		// get full message length
+		console.log('length: ' + parts.join('').length);
+		// get full message
+		console.log('message: ' + parts.join(''));
+	});
+
+</script>
+</body>
+</html>
