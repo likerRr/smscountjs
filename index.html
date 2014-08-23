@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>Smscountjs</h1>
-        <p>Get sms count (cyrillic, latin)</p>
+        <p>Get sms count (cyrillic, latin, french, german)</p>
 
         <p class="view"><a href="https://github.com/likerRr/smscountjs">View the Project on GitHub <small>likerRr/smscountjs</small></a></p>
 
@@ -31,7 +31,7 @@
         <h3>
 <a name="what-is-smscountjs" class="anchor" href="#what-is-smscountjs"><span class="octicon octicon-link"></span></a>What is <em>smscountjs</em>?</h3>
 
-<p>It provides you some ways to obtain sms count and characters left via provided text string</p>
+<p>This javascript plugin provides you some ways to obtain sms count and characters left via provided text string</p>
 
 <h3>
 <a name="why-i-need-it" class="anchor" href="#why-i-need-it"><span class="octicon octicon-link"></span></a>Why i need it?</h3>
@@ -44,78 +44,151 @@
 <p>Just include <code>smscount.min.js</code> to your html document, create <code>SMS</code> instance and call <code>count</code> method or use <code>smsCount</code> method of <code>String</code> object</p>
 
 <h3>
-<a name="examples-examples" class="anchor" href="#examples-examples"><span class="octicon octicon-link"></span></a>Examples, examples!</h3>
+<a name="is-it-stable" class="anchor" href="#is-it-stable"><span class="octicon octicon-link"></span></a>Is it stable?</h3>
 
-<p>Let's see, how it works by first way:</p>
+<p>Current version is <code>1.0</code>, it's stable and include these features:</p>
 
-<pre><code>var sms = SMS(), // also you can use `new` keyword
-    text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
-        'current total sms count and characters left to next sms. SMS in latin may contain ' +
-        '160 characters per SMS';
+<ul>
+<li>Usage from <code>new instance</code> or <code>String</code> prototype</li>
+<li>Returns <code>limit</code>, <code>smsCout</code>, <code>charsLeft</code>, <code>parts</code> from inputed text in callback or as object</li>
+<li>configure 7-bit, 8-bit, 16-bit character set length limit</li>
+<li>Has 4 methods to get sms text parameters: <code>charsLeft()</code>,  <code>total()</code>, <code>limit()</code>, <code>parts()</code>
+</li>
+</ul><h3>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic usage</h3>
 
-sms.count(text, function(totalCount, charsLeft, source) {
-    console.log('total: ' + totalCount); // total sms count
-    console.log('left: ' + charsLeft); // characters left to next sms
-    console.log(parts); // source text separated by SMS limitation 
+<p>Let's see, how it works by object oriented way:</p>
+
+<pre><code>var sms = SMS(),// also you can use "new" keyword
+    text = 'Hello, world! This is a simple example of how to use "smscountjs" to calculate current total sms count and characters left to next sms. SMS in latin may contain up to 160 characters per SMS';
+
+sms.count(text, function(totalCount, charsLeft, parts, limit) {
+    console.log('total: ' + totalCount);
+    console.log('left: ' + charsLeft);
+    console.log('limit: ' + limit);
+    console.log(parts);
+    // get full message length
+    console.log('length: ' + parts.join('').length);
+    // get full message
+    console.log('message: ' + parts.join(''));
 });
 </code></pre>
 
 <p>Code above will output:
-<img src="http://clip2net.com/clip/m182888/1407244798-bc3e6-8kb.png?nocache=1" alt="This image"></p>
+<img src="https://github.com/likerRr/smscountjs/blob/master/docs/images/1.png" alt="Output_1"></p>
 
-<p>If you prefer to use <code>smscount</code> directly with String, just make same:</p>
+<p>If you prefer to use <code>smscount</code> directly with String object, just make same:</p>
 
-<pre><code>var text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
-    'current total sms count and characters left to next sms. SMS in latin may contain ' +
-    '160 characters per SMS';
+<pre><code>var text = 'Hello, world! This is a simple example of how to use "smscountjs" to calculate current total sms count and characters left to next sms. SMS in latin may contain up to 160 characters per SMS';
 
-text.smsCount(function(totalCount, charsLeft, parts) {
+text.smsCount(function(totalCount, charsLeft, parts, limit) {
     console.log('total: ' + totalCount);
     console.log('left: ' + charsLeft);
-    console.log(parts)
+    console.log('limit: ' + limit);
+    console.log(parts);
+    // get full message length
+    console.log('length: ' + parts.join('').length);
+    // get full message
+    console.log('message: ' + parts.join(''));
 });
 // output will be the same as above
 </code></pre>
 
-<p>See? It's pretty simple!</p>
+<p>To get counted data not in callback function, you can simply skip second parameter, in this case method will return object with the same fields: </p>
+
+<pre><code>var sms = SMS(),// also you can use "new" keyword
+    text = 'Hello, world! This is a simple example of how to use "smscountjs" to calculate current total sms count and characters left to next sms. SMS in latin may contain up to 160 characters per SMS';
+
+console.log(sms.count(text));
+</code></pre>
+
+<p><img src="https://github.com/likerRr/smscountjs/blob/master/docs/images/4.png" alt="Output_5">
+See? It's pretty simple!</p>
 
 <h3>
 <a name="how-about-utf-16" class="anchor" href="#how-about-utf-16"><span class="octicon octicon-link"></span></a>How about UTF-16?</h3>
 
-<p>As known, SMS protocol can send only 160 bytes of data. Currently <code>smscount</code> may work with latin (160 symbols) and cyrillic (70 sybmols). Be free to use both latin and cyrillic encoding</p>
+<p><code>smscount</code> perfectly recognize 7-bit (latin), 8-bit (frehcn and german specific symbols) and 16-bit (cyrillic) charset according to <a href="http://en.wikipedia.org/wiki/GSM_03.38">GSM 03.38</a>. Just put string with your encoding and get results. Also it works with mixed encodings (shortest limit will be used in this case):</p>
 
-<h3>
-<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h3>
+<pre><code>var latinText = 'to have fun without stopping',
+    frenchText = 's\'amuser sans arrêt',
+    cyrillicText = 'веселиться без остановки',
+    mixedText = latinText + ', ' + frenchText + ', ' + cyrillicText;
 
-<p>You can configure limit for latin and cyrillic encoding, by passing options object to SMS constructor:</p>
-
-<pre><code>var sms = SMS({
-        latin: 50,
-        cyrillic: 20
-    }),
-    text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
-        'current total sms count and characters left to next sms. SMS in latin may contain ' +
-        '160 characters per SMS';
-
-sms.count(text, function(totalCount, charsLeft, parts) {
-    console.log('total: ' + totalCount);
-    console.log('left: ' + charsLeft);
-    console.log(parts)
+latinText.smsCount(function(totalCount, charsLeft, parts, limit) {
+    console.log('limit: ' + limit);
+});
+frenchText.smsCount(function(totalCount, charsLeft, parts, limit) {
+    console.log('limit: ' + limit);
+});
+cyrillicText.smsCount(function(totalCount, charsLeft, parts, limit) {
+    console.log('limit: ' + limit);
+});
+mixedText.smsCount(function(totalCount, charsLeft, parts, limit) {
+    console.log('limit: ' + limit);
 });
 </code></pre>
 
 <p>Code above will output:
-<img src="http://clip2net.com/clip/m182888/1407248152-7a06b-12kb.png?nocache=1" alt="enter image description here"></p>
+<img src="https://github.com/likerRr/smscountjs/blob/master/docs/images/3.png" alt="Output_4"></p>
 
-<p>To configure call from String object, pass options object as first parameter and callback as second:</p>
+<h3>
+<a name="methods" class="anchor" href="#methods"><span class="octicon octicon-link"></span></a>Methods</h3>
 
-<pre><code>var text = 'Hello, world! This is a simple example of how to use `smscountjs` to calculate ' +
-    'current total sms count and characters left to next sms. SMS in latin may contain ' +
-    '160 characters per SMS';
+<p><code>smscount</code> has some methods, available only from object oriented uasge:</p>
+
+<ul>
+<li>
+<em>int</em> charsLeft() - returns characters left to next sms</li>
+<li>
+<em>int</em> limit() - limit applied to string</li>
+<li>
+<em>int</em> total() - total sms count</li>
+<li>
+<em>array</em> parts() - parts of sms message, separated by limit</li>
+</ul><p>In action:</p>
+
+<pre><code>var sms = SMS(),  // also you can use "new" keyword
+    text = 'Hello, world! This is a simple example of how to use "smscountjs" to calculate current total sms count and characters left to next sms. SMS in latin may contain up to 160 characters per SMS';
+
+sms.count(text);
+console.log('left: ' + sms.charsLeft());
+console.log('limit: ' + sms.limit());
+console.log('total: ' + sms.total());
+console.log(sms.parts());
+</code></pre>
+
+<h3>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h3>
+
+<p>You can configure limit according to 7-bit, 8-bit, 16-bit encoding, by passing options object to SMS constructor:</p>
+
+<pre><code>var sms = SMS({
+        _7bit: 50
+    }),// also you can use "new" keyword
+    text = 'Hello, world! This is a simple example of how to use "smscountjs" to calculate current total sms count and characters left to next sms. SMS in latin may contain up to 160 characters per SMS';
+
+sms.count(text, function(totalCount, charsLeft, parts, limit) {
+    console.log('total: ' + totalCount);
+    console.log('left: ' + charsLeft);
+    console.log('limit: ' + limit);
+    console.log(parts);
+    // get full message length
+    console.log('length: ' + parts.join('').length);
+    // get full message
+    console.log('message: ' + parts.join(''));
+});
+</code></pre>
+
+<p>Code above will output:
+<img src="https://github.com/likerRr/smscountjs/blob/master/docs/images/2.png" alt="Output_3"></p>
+
+<p>To configure call from String object, pass options object as first parameter and callback as second parameter:</p>
+
+<pre><code>var text = 'Hello, world! This is a simple example of how to use "smscountjs" to calculate current total sms count and characters left to next sms. SMS in latin may contain 160 characters per SMS';
 
 text.smsCount({
-    latin: 50,
-    cyrillic: 20
+    _7bit: 50
 }, function(totalCount, charsLeft, parts) {
     console.log('total: ' + totalCount);
     console.log('left: ' + charsLeft);
@@ -127,14 +200,17 @@ text.smsCount({
 <p>Thats all, again pretty simple, yeah?</p>
 
 <h3>
+<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References</h3>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/SMS">SMS description</a></li>
+<li><a href="http://en.wikipedia.org/wiki/GSM_03.38">GSM 03.38 character set</a></li>
+<li><a href="http://webdesign.about.com/od/localization/l/blhtmlcodes-fr.htm">ASCII table for languages</a></li>
+<li><a href="http://www.epochta.ru/knowledgebase/articles/sms-long.html">How to count character by byte length (ru)</a></li>
+</ul><h3>
 <a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h3>
 
 <p>Under MIT license (<a href="http://www.opensource.org/licenses/mit-license.php">http://www.opensource.org/licenses/mit-license.php</a>)</p>
-
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/likerRr">likerRr</a></p>
