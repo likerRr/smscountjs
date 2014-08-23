@@ -74,9 +74,9 @@
 
         /**
          * Calculate sms count, characters left to next sms and call callback
-         * function with 3 params: totalSms, charsLeft, source text
+         * function with 4 params: totalSms, charsLeft, parts, limit
          * @param text - source string
-         * @param [cb] - callback(totalSms, charsLeft, text)
+         * @param [cb] - callback(totalSms, charsLeft, parts, limit)
          * @return {SMS|window.SMS|{totalSms: number, charsLeft: number, parts: Array, limit: number}}
          */
         self.count = function(text, cb) {
@@ -147,7 +147,7 @@
      * @param {object} [options]
      * @param {number} options._16bit
      * @param {number} options._7bit
-     * @param [cb] - will call after counting with 3 params: totalSms, charsLeft, text
+     * @param [cb] - will call after counting with 4 params: totalSms, charsLeft, parts, limit
      * @returns {String}
      */
     String.prototype.smsCount = function(options, cb) {
