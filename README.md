@@ -1,5 +1,5 @@
 ### What is *smscountjs*?
-This javascript plugin provides you some ways to obtain sms count and characters left via provided text string
+This javascript plugin provides you some ways to obtain sms count and characters left via provided text string. [Demo](http://likerrr.github.io/smscountjs/)
 
 ### Why i need it?
 Sometimes may be useful to integrate into your project sms newsletter. So, once you've done it, it would be nice to have some hints (for those who will write sms text) such as total sms count and character left to next sms. At this point you need **smscountjs**
