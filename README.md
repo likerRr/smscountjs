@@ -15,6 +15,8 @@ Current version is `1.0`, it's stable and include these features:
  - configure 7-bit, 8-bit, 16-bit character set length limit
  - Has 4 methods to get sms text parameters: `charsLeft()`,  `total()`, `limit()`, `parts()`
 
+All this only is 1.5kb!
+
 ### Basic usage
 Let's see, how it works by object oriented way:
 
