@@ -14,8 +14,7 @@ Current version is `1.0`, it's stable and include these features:
  - Returns `limit`, `smsCout`, `charsLeft`, `parts` from inputed text in callback or as object
  - configure 7-bit, 8-bit, 16-bit character set length limit
  - Has 4 methods to get sms text parameters: `charsLeft()`,  `total()`, `limit()`, `parts()`
-
-All this only is 1.5kb!
+ - 1.5kb minified
 
 ### Basic usage
 Let's see, how it works by object oriented way:
